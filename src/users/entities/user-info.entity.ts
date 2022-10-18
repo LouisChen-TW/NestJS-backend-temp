@@ -18,7 +18,7 @@ import { User } from './user.entity';
 @Entity()
 export class UserInfo {
   @PrimaryGeneratedColumn('uuid')
-  id?: number;
+  id?: string;
 
   @Column()
   address?: string;
@@ -28,18 +28,21 @@ export class UserInfo {
   @Length(10, 10)
   birthDate?: Date;
 
-  @Column()
+  @Column({ unique: true })
   @IsPhoneNumber('TW')
   mobilePhone?: string;
 
-  @OneToOne(() => User, (user) => user.userInfo, { cascade: true })
+  @OneToOne(() => User, (user) => user.userInfo, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user?: User;
 
   // 寫入或更新時判斷資料格式
   @BeforeInsert()
   @BeforeUpdate()
-  private async validate?() {
+  protected async validate?() {
     await validateOrReject(this);
   }
 }

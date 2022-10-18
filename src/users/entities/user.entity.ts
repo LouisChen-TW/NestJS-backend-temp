@@ -11,6 +11,12 @@ import {
 } from 'typeorm';
 import { UserInfo } from './user-info.entity';
 
+export enum UserRole {
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  STAFF = 'staff',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -23,7 +29,7 @@ export class User {
   password?: string;
 
   @Column({ unique: true })
-  @IsEmail()
+  @IsEmail({}, { message: 'Please provide a valid email' })
   email?: string;
 
   @Column()
@@ -31,6 +37,13 @@ export class User {
 
   @Column({ default: false })
   isEnabled?: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.STAFF,
+  })
+  role?: UserRole;
 
   @CreateDateColumn()
   registerTime?: Date;
@@ -41,13 +54,13 @@ export class User {
   // 寫入或更新時判斷資料格式
   @BeforeInsert()
   @BeforeUpdate()
-  private async validate?() {
+  protected async validate?() {
     await validateOrReject(this);
   }
 
   // 註冊寫入資料時雜湊密碼
   @BeforeInsert()
-  private async hashPassword?() {
+  protected async hashPassword?() {
     const plainPassword = this.password;
     const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(plainPassword, salt);

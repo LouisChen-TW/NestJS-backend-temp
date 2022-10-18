@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 
 import { RouterModule } from '@nestjs/core';
 import { UsersModule } from './users/users.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,6 +30,7 @@ import { UsersModule } from './users/users.module';
     ]),
     AuthModule,
     UsersModule,
+    AuthorizationModule,
   ],
 })
 export class AppModule {

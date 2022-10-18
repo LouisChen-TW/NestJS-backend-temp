@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserInfo } from './entities/user-info.entity';
 import { User } from './entities/user.entity';
 
-import { RegisterDto } from './users.dto';
+import { CreateUserDto, UpdateUserDto, UpdateUserInfoDto } from './users.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -14,7 +18,7 @@ export class UsersService {
     private readonly usersInfoRepository: Repository<UserInfo>,
   ) {}
 
-  async register(data: RegisterDto): Promise<object> {
+  async createUser(data: CreateUserDto): Promise<object> {
     const user: User = {
       account: data.account,
       password: data.password,
@@ -46,6 +50,9 @@ export class UsersService {
     userInfo.user = newUser;
     this.usersInfoRepository.create(userInfo);
     const newUserInfo: UserInfo = await this.usersInfoRepository.save(userInfo);
+    if (!newUser || !newUserInfo) {
+      throw new ConflictException('請稍後再試');
+    }
 
     return {
       id: newUserInfo.user.id,
@@ -71,5 +78,67 @@ export class UsersService {
       .getOne();
 
     return user;
+  }
+
+  async getUsers(): Promise<User[]> {
+    const users = await this.usersRepository.find({
+      relations: { userInfo: true },
+    });
+    return users;
+  }
+
+  async getUserById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    if (!user) {
+      throw new BadRequestException(`找不到使用者ID: ${id} `);
+    }
+    return user;
+  }
+
+  async updateUserById(id: string, data: UpdateUserDto): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException(`找不到使用者ID: ${id} `);
+    }
+    const updatedUser = await this.usersRepository.save({ ...user, ...data });
+
+    if (!updatedUser) {
+      throw new ConflictException('發生錯誤，請稍後再試');
+    }
+    return updatedUser;
+  }
+
+  async updateUserInfoById(id: string, data: UpdateUserInfoDto) {
+    const qb = this.usersInfoRepository.createQueryBuilder('userInfo');
+
+    const userInfo = await qb
+      .leftJoin('userInfo.user', 'user')
+      .where('user.id = :userId', { userId: id })
+      .getOne();
+
+    if (!userInfo) {
+      throw new BadRequestException(`找不到使用者ID: ${id} `);
+    }
+
+    const updatedUserInfo: UserInfo = await this.usersInfoRepository.save({
+      ...userInfo,
+      ...data,
+    });
+
+    if (!updatedUserInfo) {
+      throw new ConflictException('發生錯誤，請稍後再試');
+    }
+    return updatedUserInfo;
+  }
+
+  async deleteUserById(id: string): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException(`找不到使用者ID: ${id} `);
+    }
+    const deletedUser = await this.usersRepository.remove(user);
+    if (!deletedUser) {
+      throw new ConflictException('發生錯誤，請稍後再試');
+    }
   }
 }

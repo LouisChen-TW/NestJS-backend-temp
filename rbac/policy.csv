@@ -1,0 +1,12 @@
+p, role:admin, /api/v1/users, * 
+p, role:admin, /api/v1/users/:id, *
+p, role:admin, /api/v1/users/userinfo/:id, *
+p, role:manager, /api/v1/users, create
+p, role:manager, /api/v1/users/:id, delete
+p, role:staff, /api/v1/users, read
+p, role:staff, /api/v1/users/userinfo/:id, update
+p, role:staff, /api/v1/users/:id, read
+p, role:staff, /api/v1/users/:id, update
+
+
+g, role:manager, role:staff

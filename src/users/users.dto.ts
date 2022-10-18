@@ -10,7 +10,7 @@ import {
   Matches,
 } from 'class-validator';
 
-export class RegisterDto {
+export class CreateUserDto {
   @IsAlphanumeric('en-US', { message: '帳號只能為英文和數字之組合' })
   @IsNotEmpty()
   @IsString()
@@ -29,6 +29,34 @@ export class RegisterDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+  @IsOptional()
+  @IsString()
+  address: string;
+  @IsOptional()
+  @IsISO8601({ strict: true })
+  @Length(10, 10)
+  birthDate: Date;
+  @IsNotEmpty()
+  @IsPhoneNumber('TW')
+  @Length(10, 10)
+  mobilePhone: string;
+}
+
+export class UpdateUserDto {
+  @IsAlphanumeric('en-US', { message: '帳號只能為英文和數字之組合' })
+  @IsOptional()
+  @IsString()
+  @Length(6, 18, { message: '帳號長度應為6至18之間' })
+  account?: string;
+  @IsOptional()
+  @IsString()
+  name?: string;
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+}
+
+export class UpdateUserInfoDto {
   @IsOptional()
   @IsString()
   address: string;

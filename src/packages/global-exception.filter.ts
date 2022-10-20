@@ -11,7 +11,6 @@ import {
   CannotCreateEntityIdMapError,
   TypeORMError,
 } from 'typeorm';
-
 @Catch(QueryFailedError, EntityNotFoundError, CannotCreateEntityIdMapError)
 export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: TypeORMError, host: ArgumentsHost) {

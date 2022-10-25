@@ -8,7 +8,7 @@ import {
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 
-import { AuthorizationService } from '../../authorization/authorization.service';
+import { AuthorizationService } from '../../users/authorization/authorization.service';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -20,16 +20,16 @@ export class RoleGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const { user, path, method } = request;
 
-    const action = this.authorizationService.mappingAction(method);
+    // const action = this.authorizationService.mappingAction(method);
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
     return this.authorizationService.checkPermission(
-      `role:${(user as any).role}`,
+      `${(user as any).userId}`,
       path,
-      action,
+      method.toLowerCase(),
     );
   }
 }

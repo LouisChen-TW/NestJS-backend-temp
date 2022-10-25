@@ -1,10 +1,13 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Enforcer } from 'casbin';
 import { Repository } from 'typeorm';
+import { AUTHORIZATION_ENFORCER } from './authorization/token.const';
 import { UserInfo } from './entities/user-info.entity';
 import { User } from './entities/user.entity';
 
@@ -16,6 +19,7 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(UserInfo)
     private readonly usersInfoRepository: Repository<UserInfo>,
+    @Inject(AUTHORIZATION_ENFORCER) private readonly enforcer: Enforcer,
   ) {}
 
   async createUser(data: CreateUserDto): Promise<object> {

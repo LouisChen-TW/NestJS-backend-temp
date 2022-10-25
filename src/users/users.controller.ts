@@ -34,7 +34,7 @@ export class UsersController {
     return res.status(HttpStatus.OK).json(result);
   }
 
-  @Get('/:id')
+  @Get('id/:id')
   async getUserById(
     @Param('id') userId: string,
     @Res() res: Response,

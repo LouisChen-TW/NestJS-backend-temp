@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { sessionConfig } from './config/session';
 import { GlobalExceptionFilter } from './packages/global-exception.filter';
 import { ConfigService } from '@nestjs/config';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.use(session(sessionConfig));
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(configService.get('PORT'));
 }

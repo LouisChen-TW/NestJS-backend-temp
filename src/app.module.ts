@@ -7,11 +7,13 @@ import { AuthModule } from './auth/auth.module';
 
 import { APP_INTERCEPTOR, RouterModule } from '@nestjs/core';
 import { UsersModule } from './users/users.module';
-import { AuthorizationModule } from './authorization/authorization.module';
+import { AuthorizationModule } from './users/authorization/authorization.module';
 import { WinstonModule } from 'nest-winston';
 import { WinstonConfigService } from './config/winston';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { configValidation } from './config/config.validation';
+import { join } from 'path';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,13 +32,21 @@ import { configValidation } from './config/config.validation';
             path: 'auth',
             module: AuthModule,
           },
+          {
+            path: 'authz',
+            module: AuthorizationModule,
+          },
         ],
       },
     ]),
     WinstonModule.forRootAsync({ useClass: WinstonConfigService }),
     AuthModule,
     UsersModule,
-    AuthorizationModule,
+    AuthorizationModule.register({
+      modelPath: join(__dirname, '../rbac/model.conf'),
+      policyAdapter: join(__dirname, '../rbac/policy.csv'),
+      global: true,
+    }),
   ],
   providers: [
     {

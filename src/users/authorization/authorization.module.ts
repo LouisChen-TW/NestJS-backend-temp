@@ -1,0 +1,58 @@
+import { DynamicModule, Module } from '@nestjs/common';
+import { newEnforcer } from 'casbin';
+import TypeORMAdapter from 'typeorm-adapter';
+import { AUTHORIZATION_ENFORCER } from './token.const';
+import { RegisterOptions } from './option.interface';
+import { AuthorizationService } from './authorization.service';
+import { AuthzController } from './authorization.controller';
+import { UsersService } from '../users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../entities/user.entity';
+import { UserInfo } from '../entities/user-info.entity';
+import { ConfigModule } from '@nestjs/config';
+import { POLICIES } from './policies.const';
+
+@Module({
+  controllers: [AuthzController],
+  providers: [UsersService],
+  imports: [TypeOrmModule.forFeature([User, UserInfo]), ConfigModule.forRoot()],
+})
+export class AuthorizationModule {
+  static async register(options: RegisterOptions): Promise<DynamicModule> {
+    const { modelPath, policyAdapter, global = false } = options;
+
+    const typeORMAdapter = await TypeORMAdapter.newAdapter({
+      type: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: +process.env.MYSQL_PORT,
+      username: process.env.MYSQL_USERNAME,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+    });
+    const policies = POLICIES;
+    const providers = [
+      {
+        provide: AUTHORIZATION_ENFORCER,
+        useFactory: async () => {
+          const enforcer = await newEnforcer(modelPath, typeORMAdapter);
+          // 將所有policies加入到資料庫
+          await enforcer.addPolicies(policies);
+          // 將admin權限帶給admin角色
+          await enforcer.addRoleForUser(
+            '378bfbc4-3e21-4845-8b31-a909805621b2',
+            'admin',
+          );
+          return enforcer;
+        },
+      },
+      AuthorizationService,
+    ];
+
+    return {
+      global,
+      providers,
+      module: AuthorizationModule,
+      exports: [...providers],
+    };
+  }
+}

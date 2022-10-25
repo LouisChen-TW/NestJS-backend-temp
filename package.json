@@ -47,6 +47,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.10",
+    "typeorm-adapter": "^1.5.2",
     "winston": "^3.8.2"
   },
   "devDependencies": {

@@ -19,6 +19,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.use(session(sessionConfig));
+  app.enableCors();
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(configService.get('PORT'));

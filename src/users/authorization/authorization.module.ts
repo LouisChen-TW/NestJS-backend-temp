@@ -35,7 +35,10 @@ export class AuthorizationModule {
         provide: AUTHORIZATION_ENFORCER,
         useFactory: async () => {
           const enforcer = await newEnforcer(modelPath, typeORMAdapter);
-          // 將所有policies加入到資料庫
+          const existedPolicies = await enforcer.getPolicy();
+          // 將所有既有的policies刪除
+          await enforcer.removePolicies(existedPolicies);
+          // 將所有新policies加入到資料庫
           await enforcer.addPolicies(policies);
           // 將admin權限帶給admin角色
           await enforcer.addRoleForUser(

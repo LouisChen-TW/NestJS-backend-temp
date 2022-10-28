@@ -44,6 +44,14 @@ export class AuthorizationService {
     return allSubjects;
   }
 
+  async getSubjectByGroupName(name: string) {
+    const policies = await this.enforcer.getFilteredGroupingPolicy(0, name);
+    const subjects = policies.map((policy) => {
+      return policy[1];
+    });
+    return subjects;
+  }
+
   async addGroupingPolicies(groupName, policies) {
     await this.enforcer.removeFilteredGroupingPolicy(0, groupName);
 
@@ -85,9 +93,11 @@ export class AuthorizationService {
   async getRolesForUser(id: string) {
     const roles = await this.enforcer.getRolesForUser(id);
     const allRoles = await this.enforcer.getAllRoles();
+    const permissions = await this.enforcer.getImplicitPermissionsForUser(id);
 
-    console.log(roles);
-    console.log(allRoles);
+    // console.log(roles);
+    // console.log(allRoles);
+    console.log(permissions);
 
     return roles;
   }

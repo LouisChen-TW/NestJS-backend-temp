@@ -1,13 +1,22 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../../auth/guards/role.guard';
 import { AuthorizationService } from './authorization.service';
 
-@UseGuards(JwtAuthGuard, RoleGuard)
+@UseGuards(JwtAuthGuard)
 @Controller()
 export class AuthzController {
   constructor(private authzService: AuthorizationService) {}
 
+  @UseGuards(RoleGuard)
   @Get('subjects')
   async getAllSubjects() {
     const result = await this.authzService.getAllSubjects();
@@ -15,6 +24,13 @@ export class AuthzController {
     return result;
   }
 
+  @Get('subjects/group')
+  async getSubjectByGroupName(@Query('groupName') groupName: string) {
+    const result = await this.authzService.getSubjectByGroupName(groupName);
+    return { result };
+  }
+
+  @UseGuards(RoleGuard)
   @Post('groups')
   async addGroupingPolicies(@Body() data) {
     const groupName = data.groupName;
@@ -29,6 +45,7 @@ export class AuthzController {
     return result;
   }
 
+  @UseGuards(RoleGuard)
   @Post('/roles/:id')
   async addRolesForUser(@Param('id') userId: string, @Body('roles') roles) {
     await this.authzService.addRolesForUser(userId, roles);

@@ -27,7 +27,7 @@ export class AuthzController {
   @Get('subjects/group')
   async getSubjectByGroupName(@Query('groupName') groupName: string) {
     const result = await this.authzService.getSubjectByGroupName(groupName);
-    return { result };
+    return { result, groupName };
   }
 
   @UseGuards(RoleGuard)

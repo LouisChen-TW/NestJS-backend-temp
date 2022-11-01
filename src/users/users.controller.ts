@@ -69,6 +69,6 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<Response> {
     await this.usersService.deleteUserById(userId);
-    return res.status(HttpStatus.NO_CONTENT);
+    return res.status(HttpStatus.NO_CONTENT).json('delete success');
   }
 }

@@ -20,7 +20,6 @@ export class AuthzController {
   @Get('subjects')
   async getAllSubjects() {
     const result = await this.authzService.getAllSubjects();
-    result.shift(); // 移除第一項的admin
     return result;
   }
 

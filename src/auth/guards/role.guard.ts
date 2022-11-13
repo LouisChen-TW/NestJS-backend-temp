@@ -4,15 +4,20 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { bypassAuth } from '../../decorators/bypass.decorator';
 
 import { AuthorizationService } from '../../users/authorization/authorization.service';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-  constructor(private readonly authorizationService: AuthorizationService) {}
+  constructor(
+    private readonly authorizationService: AuthorizationService,
+    private reflector: Reflector,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
@@ -20,7 +25,9 @@ export class RoleGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const { user, path, method } = request;
 
-    // const action = this.authorizationService.mappingAction(method);
+    if (!user && bypassAuth(context, this.reflector)) {
+      return true;
+    }
 
     if (!user) {
       throw new UnauthorizedException();

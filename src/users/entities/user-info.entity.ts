@@ -24,8 +24,8 @@ export class UserInfo {
   address?: string;
 
   @Column()
-  @IsISO8601({ strict: true })
-  @Length(10, 10)
+  // @IsISO8601()
+  // @Length(10, 10)
   birthDate?: Date;
 
   @Column({ unique: true })

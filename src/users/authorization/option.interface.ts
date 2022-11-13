@@ -1,5 +1,5 @@
 export interface RegisterOptions {
   modelPath: string;
-  policyAdapter: any;
+  policyAdapter?: any;
   global?: boolean;
 }

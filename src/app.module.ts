@@ -13,7 +13,7 @@ import { WinstonConfigService } from './config/winston';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { configValidation } from './config/config.validation';
 import { join } from 'path';
-import { ResponseInterceptor } from './interceptors/response.interceptor';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -43,8 +43,8 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
     AuthModule,
     UsersModule,
     AuthorizationModule.register({
-      modelPath: join(__dirname, '../rbac/model.conf'),
-      policyAdapter: join(__dirname, '../rbac/policy.csv'),
+      modelPath: join(__dirname, '../src/rbac/model.conf'),
+      // policyAdapter: join(__dirname, '../src/rbac/policy.csv'),
       global: true,
     }),
   ],

@@ -1,13 +1,10 @@
 import {
   BadRequestException,
   ConflictException,
-  Inject,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Enforcer } from 'casbin';
 import { Repository } from 'typeorm';
-import { AUTHORIZATION_ENFORCER } from './authorization/token.const';
 import { UserInfo } from './entities/user-info.entity';
 import { User } from './entities/user.entity';
 
@@ -19,7 +16,6 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(UserInfo)
     private readonly usersInfoRepository: Repository<UserInfo>,
-    @Inject(AUTHORIZATION_ENFORCER) private readonly enforcer: Enforcer,
   ) {}
 
   async createUser(data: CreateUserDto): Promise<object> {
@@ -135,7 +131,7 @@ export class UsersService {
     return updatedUserInfo;
   }
 
-  async deleteUserById(id: string): Promise<void> {
+  async deleteUserById(id: string): Promise<string> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new BadRequestException(`找不到使用者ID: ${id} `);
@@ -144,5 +140,6 @@ export class UsersService {
     if (!deletedUser) {
       throw new ConflictException('發生錯誤，請稍後再試');
     }
+    return 'delete success';
   }
 }

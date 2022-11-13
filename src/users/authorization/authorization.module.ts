@@ -19,7 +19,7 @@ import { POLICIES } from './policies.const';
 })
 export class AuthorizationModule {
   static async register(options: RegisterOptions): Promise<DynamicModule> {
-    const { modelPath, policyAdapter, global = false } = options;
+    const { modelPath, global = false } = options;
 
     const typeORMAdapter = await TypeORMAdapter.newAdapter({
       type: 'mysql',

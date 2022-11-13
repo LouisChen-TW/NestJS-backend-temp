@@ -9,6 +9,8 @@ import {
   Length,
   Matches,
 } from 'class-validator';
+import { UserInfo } from './entities/user-info.entity';
+import { User } from './entities/user.entity';
 
 export class CreateUserDto {
   @IsAlphanumeric('en-US', { message: '帳號只能為英文和數字之組合' })
@@ -69,3 +71,12 @@ export class UpdateUserInfoDto {
   @Length(10, 10)
   mobilePhone: string;
 }
+
+// Response
+export class getAllUsersResDto extends User {}
+
+export class getUserByIdResDto extends User {}
+
+export class updateUserByIdResDto extends User {}
+
+export class updateUserInfoByIdResDto extends UserInfo {}

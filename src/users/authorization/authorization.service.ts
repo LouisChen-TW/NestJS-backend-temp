@@ -32,14 +32,7 @@ export class AuthorizationService {
   }
   async getAllSubjects() {
     const allSubjects = await this.enforcer.getAllSubjects();
-    const allObjects = await this.enforcer.getAllObjects();
-    const allActions = await this.enforcer.getAllActions();
-    const policy = await this.enforcer.getPolicy();
-
-    console.log(allSubjects);
-    console.log(allObjects);
-    console.log(allActions);
-    console.log(policy);
+    allSubjects.shift();
 
     return allSubjects;
   }
@@ -72,7 +65,6 @@ export class AuthorizationService {
       return group[0];
     });
     newAllGroups = [...new Set(newAllGroups)];
-    console.log(newAllGroups);
 
     return newAllGroups;
   }
@@ -92,13 +84,6 @@ export class AuthorizationService {
 
   async getRolesForUser(id: string) {
     const roles = await this.enforcer.getRolesForUser(id);
-    const allRoles = await this.enforcer.getAllRoles();
-    const permissions = await this.enforcer.getImplicitPermissionsForUser(id);
-
-    // console.log(roles);
-    // console.log(allRoles);
-    console.log(permissions);
-
     return roles;
   }
 
@@ -106,11 +91,9 @@ export class AuthorizationService {
     const permissions = await this.enforcer.getImplicitPermissionsForUser(id);
     const result = permissions.map((p) => {
       return {
-        void: p[0],
+        event: p[0],
         api: p[1],
-        event: p[2],
-        system: p[3],
-        children: p[4] ?? '',
+        method: p[2],
       };
     });
 

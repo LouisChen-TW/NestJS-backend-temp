@@ -6,16 +6,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserInfo } from './user-info.entity';
-
-export enum UserRole {
-  ADMIN = 'admin',
-  MANAGER = 'manager',
-  STAFF = 'staff',
-}
 
 @Entity()
 export class User {
@@ -37,13 +32,6 @@ export class User {
 
   @Column({ default: false })
   isEnabled?: boolean;
-
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.STAFF,
-  })
-  role?: UserRole;
 
   @CreateDateColumn()
   registerTime?: Date;

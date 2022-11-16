@@ -12,7 +12,7 @@ import { WinstonConfigService } from './config/winston';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { configValidation } from './config/config.validation';
 import { join } from 'path';
-import { typeormOptions } from '../database/data-source';
+import { typeormOptions } from './database/data-source';
 
 @Module({
   imports: [

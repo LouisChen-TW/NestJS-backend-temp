@@ -1,8 +1,8 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { User } from '../../src/users/entities/user.entity';
-import { UserInfo } from '../../src/users/entities/user-info.entity';
+import { User } from '../../users/entities/user.entity';
+import { UserInfo } from '../../users/entities/user-info.entity';
 
 export default class UserSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {

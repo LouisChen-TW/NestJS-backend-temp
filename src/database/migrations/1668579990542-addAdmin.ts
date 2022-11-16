@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { UserInfo } from '../../src/users/entities/user-info.entity';
-import { User } from '../../src/users/entities/user.entity';
+import { UserInfo } from '../../users/entities/user-info.entity';
+import { User } from '../../users/entities/user.entity';
 
-export class addAdmin1668574674355 implements MigrationInterface {
+export class addAdmin1668579990542 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const userInfoRepo = queryRunner.connection.getRepository(UserInfo);
     const user = new User();

@@ -1,5 +1,5 @@
 {
-  "name": "ani-backend-tem",
+  "name": "nestjs-backend-temp",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -19,7 +19,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed"
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -f src/config/typeorm.config-migrations.ts",
+    "seed": "npx typeorm-extension seed -d /database/data-source.ts",
+    "typeorm": "npm run build && npx typeorm -d dist/database/data-source.js",
+    "migration:generate": "npm run typeorm -- migration:generate -d database/migrations -n",
+    "migration:create": "typeorm migration:create database/migrations/$npm_config_name",
+    "migration:run": "npm run build && npx typeorm-ts-node-commonjs migration:run -d dist/database/data-source.js",
+    "migration:revert": "npx typeorm-ts-node-commonjs migration:revert -d dist/database/data-source.js"
   },
   "dependencies": {
     "@nestjs/axios": "^0.1.0",

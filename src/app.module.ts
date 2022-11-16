@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { TypeOrmConfigService } from './config/typeorm';
 import { AuthModule } from './auth/auth.module';
 
 import { APP_INTERCEPTOR, RouterModule } from '@nestjs/core';
@@ -13,6 +12,7 @@ import { WinstonConfigService } from './config/winston';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { configValidation } from './config/config.validation';
 import { join } from 'path';
+import { typeormOptions } from '../database/data-source';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { join } from 'path';
       cache: true,
       validationSchema: configValidation,
     }),
-    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    TypeOrmModule.forRoot(typeormOptions),
     RouterModule.register([
       {
         path: 'users',
@@ -43,7 +43,7 @@ import { join } from 'path';
     AuthModule,
     UsersModule,
     AuthorizationModule.register({
-      modelPath: join(__dirname, '../src/rbac/model.conf'),
+      modelPath: join(__dirname, '../rbac/model.conf'),
       // policyAdapter: join(__dirname, '../src/rbac/policy.csv'),
       global: true,
     }),

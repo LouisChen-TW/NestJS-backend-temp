@@ -1,15 +1,11 @@
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
+import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
 import { faker } from '@faker-js/faker';
-import { UserInfo } from '../../users/entities/user-info.entity';
+import { User } from '../../src/users/entities/user.entity';
+import { UserInfo } from '../../src/users/entities/user-info.entity';
 
 export default class UserSeeder implements Seeder {
-  public async run(
-    dataSource: DataSource,
-    // factoryManager: SeederFactoryManager,
-  ): Promise<any> {
-    const userRepo = dataSource.getRepository(User);
+  public async run(dataSource: DataSource): Promise<any> {
     const userInfoRepo = dataSource.getRepository(UserInfo);
 
     const ROUND = 1;
@@ -29,16 +25,8 @@ export default class UserSeeder implements Seeder {
         mode: 'age',
       });
       userInfo.mobilePhone = faker.phone.number('09########');
-      const newUser = userRepo.create(user);
-      userInfo.user = newUser;
-      const newUserInfo = userInfoRepo.create(userInfo);
-      await userInfoRepo.save(newUserInfo);
+      userInfo.user = user;
+      await userInfoRepo.save(userInfo);
     }
-
-    // const userFactory = await factoryManager.get(User);
-
-    // const userInfoFactory = await factoryManager.get(UserInfo);
-    // await userFactory.save();
-    // await userFactory.save();
   }
 }

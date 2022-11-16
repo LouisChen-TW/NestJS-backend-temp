@@ -41,10 +41,7 @@ export class AuthorizationModule {
           // 將所有新policies加入到資料庫
           await enforcer.addPolicies(policies);
           // 將admin權限帶給admin角色
-          await enforcer.addRoleForUser(
-            '378bfbc4-3e21-4845-8b31-a909805621b2',
-            'admin',
-          );
+          await enforcer.addRoleForUser('ADMIN', 'admin');
           return enforcer;
         },
       },

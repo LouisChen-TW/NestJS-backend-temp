@@ -8,9 +8,9 @@ import { Reflector } from '@nestjs/core';
 
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { bypassAuth } from '../../decorators/bypass.decorator';
+import { bypassAuth } from '../decorators/bypass.decorator';
 
-import { AuthorizationService } from '../../users/authorization/authorization.service';
+import { AuthorizationService } from '../users/authorization/authorization.service';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

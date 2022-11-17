@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RoleGuard } from '../auth/guards/role.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RoleGuard } from '../guards/role.guard';
 import { BypassAuth } from '../decorators/bypass.decorator';
 import {
   CreateUserDto,
@@ -24,6 +24,7 @@ import {
   UpdateUserInfoDto,
 } from './users.dto';
 import { UsersService } from './users.service';
+
 @UseGuards(JwtAuthGuard, RoleGuard)
 @Controller()
 export class UsersController {

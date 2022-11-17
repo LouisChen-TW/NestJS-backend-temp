@@ -7,8 +7,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RoleGuard } from '../../auth/guards/role.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { RoleGuard } from '../../guards/role.guard';
 import { AuthorizationService } from './authorization.service';
 
 @UseGuards(JwtAuthGuard)

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -47,11 +47,18 @@ import { typeormOptions } from './database/data-source';
       // policyAdapter: join(__dirname, '../src/rbac/policy.csv'),
       global: true,
     }),
+    CacheModule.register({
+      isGlobal: true,
+    }),
   ],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
   ],
 })

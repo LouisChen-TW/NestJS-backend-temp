@@ -13,8 +13,8 @@ services:
       --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nestjs-backend-temp
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     volumes:
       - ./mysql:/var/lib/mysql
     ports:
@@ -25,11 +25,11 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - env/.env.development
+      - .env
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nestjs-backend-temp
+      - MYSQL_HOST=mysql
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     restart: always
     ports:
       - 3000:3000

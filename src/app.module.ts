@@ -16,7 +16,6 @@ import { typeormOptions } from './database/data-source';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `${process.cwd()}/env/.env.${process.env.NODE_ENV}`,
       isGlobal: true,
       cache: true,
       validationSchema: configValidation,

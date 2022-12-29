@@ -12,6 +12,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { configValidation } from './config/config.validation';
 import { join } from 'path';
 import { typeormOptions } from './database/data-source';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -46,7 +47,15 @@ import { typeormOptions } from './database/data-source';
       global: true,
     }),
     CacheModule.register({
-      isGlobal: true,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      store: async () =>
+        await redisStore({
+          socket: {
+            host: '127.0.0.1',
+            port: 6379,
+          },
+        }),
     }),
   ],
   providers: [
